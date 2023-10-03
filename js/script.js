@@ -265,7 +265,7 @@ function displaySearchResults(results) {
             ${
               result.poster_path
                 ? `<img
-              src="https://image.tmdb.org/t/p/w500${movie.poster_path}"
+              src="https://image.tmdb.org/t/p/w500/${results.poster_path}"
               class="card-img-top"
               alt="${global.search.type==='movie' ? result.title:result.name}"
             />`
@@ -279,12 +279,12 @@ function displaySearchResults(results) {
           <div class="card-body">
             <h5 class="card-title">"${global.search.type==='movie' ? result.title:result.name}"</h5>
             <p class="card-text">
-              <small class="text-muted">Release: ${movie.release_date}</small>
+              <small class="text-muted">Release: "${global.search.type==='movie' ? result.release_date:result.first_air_date}"</small>
             </p>
           </div>
         `;
 
-    document.querySelector('#popular-movies').appendChild(div);
+    document.querySelector('#search-results').appendChild(div);
   });
 }
 
