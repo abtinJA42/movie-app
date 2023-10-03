@@ -4,7 +4,8 @@ const global = {
       term: '' ,
       type: '' ,
       page: 1 ,
-      total_pages: 1
+      total_pages: 1 ,
+      totalResults: 0
     },
     api: {
       apiKey: 'b2da565148e4104898e83a8d542e73d3' ,
