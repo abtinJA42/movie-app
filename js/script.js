@@ -245,12 +245,49 @@ async function search() {
      
     if(results.length === 0) {
       showAlert('no rsults found')
+      return
     }
+    displaySearchResults(results)
 
+    document.querySelector('#search-term').value = ''
     } else {
       showAlert('please enter a search term')
     }
 }
+
+
+function displaySearchResults(results) {
+ results.forEach((result) => {
+    const div = document.createElement('div');
+    div.classList.add('card');
+    div.innerHTML = `
+          <a href="${global.search.type}-details.html?id=${result.id}">
+            ${
+              result.poster_path
+                ? `<img
+              src="https://image.tmdb.org/t/p/w500${movie.poster_path}"
+              class="card-img-top"
+              alt="${global.search.type==='movie' ? result.title:result.name}"
+            />`
+                : `<img
+            src="../images/no-image.jpg"
+            class="card-img-top"
+            alt="${global.search.type==='movie' ? result.title:result.name}"
+          />`
+            }
+          </a>
+          <div class="card-body">
+            <h5 class="card-title">"${global.search.type==='movie' ? result.title:result.name}"</h5>
+            <p class="card-text">
+              <small class="text-muted">Release: ${movie.release_date}</small>
+            </p>
+          </div>
+        `;
+
+    document.querySelector('#popular-movies').appendChild(div);
+  });
+}
+
 
 // display slider movies
 async function displaySlider() {
