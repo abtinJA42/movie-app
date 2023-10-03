@@ -1,5 +1,11 @@
 const global = {
-    currentPage : window.location.pathname
+    currentPage : window.location.pathname,
+    search: {
+      term: '' ,
+      type: '' ,
+      page: 1 ,
+      total_pages: 1
+    }
 }
 
 async function displayPopularMovies() {
@@ -224,6 +230,19 @@ function dsiplayBackgroundImage(type,backgroundPath) {
   }
 }
 
+// search utility
+async function search() {
+    const queryString = window.location.search
+    const urlParams = new URLSearchParams(queryString)
+    global.search.type = urlParams.get('type')
+    global.search.term = urlParams.get('search-term')
+    if(global.search.term !== '' && global.search.term !==null) {
+      //  todo - make request  - display results
+    } else {
+      showAlert('please enter a search term')
+    }
+}
+
 // display slider movies
 async function displaySlider() {
    const {results} = await fetchAPIData('movie/now_playing')
@@ -299,6 +318,14 @@ function hideSpinner() {
   document.querySelector('.spinner').classList.remove('show')
 }
 
+// show alert
+function showAlert(message,classNmae) {
+   const alertEl = document.createElement('div')
+   alertEl.classList.add('alert' ,classNmae)
+   alertEl.appendChild(document.createTextNode(message))
+   document.querySelector('#alert').appendChild(alertEl)
+}
+
 function addCommasToNumber(number) { 
    return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 }
@@ -321,7 +348,7 @@ function init() {
         displayShowDetails()
         break
         case '/search.html':
-          console.log('search');
+          search()
           break
 
     }
