@@ -5,6 +5,10 @@ const global = {
       type: '' ,
       page: 1 ,
       total_pages: 1
+    },
+    api: {
+      apiKey: 'b2da565148e4104898e83a8d542e73d3' ,
+      apiUrl: 'https://api.themoviedb.org/3/'
     }
 }
 
@@ -237,7 +241,8 @@ async function search() {
     global.search.type = urlParams.get('type')
     global.search.term = urlParams.get('search-term')
     if(global.search.term !== '' && global.search.term !==null) {
-      //  todo - make request  - display results
+     const results = await searchAPIData()
+     console.log(results);
     } else {
       showAlert('please enter a search term')
     }
@@ -289,16 +294,30 @@ function initSwiper() {
 
 // fetch data from TMDB API
 async function fetchAPIData(endpoint) {
-  const API_KEY = 'b2da565148e4104898e83a8d542e73d3'
-  const API_URL = 'https://api.themoviedb.org/3/'
+  const API_KEY = global.api.apiKey
+  const API_URL = global.api.apiUrl
 
    showSpinner()
 
-  const response = await fetch(`${API_URL}${endpoint}?api_key=${API_KEY}&language=en-US`)
+  const response = await fetch(
+    `${API_URL}${endpoint}?api_key=${API_KEY}&language=en-US`)
   const data = await response.json()
   hideSpinner()
   return data
 }
+
+async function searchAPIData() {
+  const API_KEY = global.api.apiKey
+  const API_URL = global.api.apiUrl
+
+   showSpinner()
+
+  const response = await fetch(
+    `${API_URL}search/${global.search.type}?api_key=${API_KEY}&language=en-US&query=${global.search.term}`)
+  const data = await response.json()
+  hideSpinner()
+  return data
+} 
 
 // highligh active link
 function highlighActiveLink() {
@@ -324,7 +343,11 @@ function showAlert(message,classNmae) {
    alertEl.classList.add('alert' ,classNmae)
    alertEl.appendChild(document.createTextNode(message))
    document.querySelector('#alert').appendChild(alertEl)
-}
+   
+   setTimeout(() => {
+    alertEl.remove()
+   },3000)
+  }
 
 function addCommasToNumber(number) { 
    return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
