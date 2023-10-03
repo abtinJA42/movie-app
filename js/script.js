@@ -241,8 +241,12 @@ async function search() {
     global.search.type = urlParams.get('type')
     global.search.term = urlParams.get('search-term')
     if(global.search.term !== '' && global.search.term !==null) {
-     const results = await searchAPIData()
-     console.log(results);
+     const { results,total_pages,page } = await searchAPIData()
+     
+    if(results.length === 0) {
+      showAlert('no rsults found')
+    }
+
     } else {
       showAlert('please enter a search term')
     }
@@ -338,7 +342,7 @@ function hideSpinner() {
 }
 
 // show alert
-function showAlert(message,classNmae) {
+function showAlert(message,className='error') {
    const alertEl = document.createElement('div')
    alertEl.classList.add('alert' ,classNmae)
    alertEl.appendChild(document.createTextNode(message))
