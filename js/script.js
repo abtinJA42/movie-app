@@ -258,7 +258,7 @@ async function search() {
     } else {
       showAlert('please enter a search term')
     }
-}
+} 
 
 
 function displaySearchResults(results) {
@@ -294,8 +294,19 @@ function displaySearchResults(results) {
 
     document.querySelector('#search-results').appendChild(div);
   });
+  displayPagination()
 }
 
+// creare and display pagination
+function displayPagination() {
+  const div = document.createElement('div')
+  div.classList.add('pagination')
+  div.innerHTML = ` <button class="btn btn-primary" id="prev">Prev</button>
+  <button class="btn btn-primary" id="next">Next</button>
+  <div class="page-counter">page ${global.search.page} of ${global.search.total_pages}</div>
+  `
+  document.querySelector('#pagiantion').appendChild(div)
+}
 
 // display slider movies
 async function displaySlider() {
