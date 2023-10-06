@@ -262,7 +262,12 @@ async function search() {
 
 
 function displaySearchResults(results) {
- results.forEach((result) => {
+//  clear previous results
+document.querySelector('#search-results').innerHTML = ''
+document.querySelector('#search-results-heading').innerHTML = ''
+document.querySelector('#pagination').innerHTML = ''
+ 
+  results.forEach((result) => {
     const div = document.createElement('div');
     div.classList.add('card');
     div.innerHTML = `
@@ -306,6 +311,28 @@ function displayPagination() {
   <div class="page-counter">page ${global.search.page} of ${global.search.total_pages}</div>
   `
   document.querySelector('#pagiantion').appendChild(div)
+  // disable prev button if on first page
+  if(global.search.page ===1 ){
+    document.querySelector('#prev').disabled = true
+  }
+
+  // disble next button if on last page
+   if(global.search.page ===global.search.total_pages ){
+    document.querySelector('#next').disabled = true
+  }
+
+  // next page
+  document.querySelector('#next').addEventListener('click' , async() => { 
+    global.search.page++
+    const {results,total_pages} = await searchAPIData()
+    displaySearchResults(results)
+  })
+   // prev page
+  document.querySelector('#prev').addEventListener('click' , async() => { 
+    global.search.page--
+    const {results,total_pages} = await searchAPIData()
+    displaySearchResults(results)
+  })
 }
 
 // display slider movies
@@ -366,6 +393,7 @@ async function fetchAPIData(endpoint) {
   return data
 }
 
+// search the api data
 async function searchAPIData() {
   const API_KEY = global.api.apiKey
   const API_URL = global.api.apiUrl
@@ -373,7 +401,7 @@ async function searchAPIData() {
    showSpinner()
 
   const response = await fetch(
-    `${API_URL}search/${global.search.type}?api_key=${API_KEY}&language=en-US&query=${global.search.term}`)
+    `${API_URL}search/${global.search.type}?api_key=${API_KEY}&language=en-US&query=${global.search.term}&page=${global.search.page}`)
   const data = await response.json()
   hideSpinner()
   return data
